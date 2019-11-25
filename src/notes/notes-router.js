@@ -6,7 +6,7 @@ const notesRouter = express.Router();
 const jsonParser = express.json();
 
 const serializeNote = note => ({
-  id: note.id,
+  note_id: note.note_id,
   title: note.title,
   folder_id: note.folder_id,
   content: note.content,
@@ -25,8 +25,8 @@ notesRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-    const { title, folder_id, content, modified } = req.body;
-    const newNote = { title, folder_id, content, modified };
+    const { title, folder_id, content, date_published } = req.body;
+    const newNote = { title, folder_id, content, date_published };
 
     for (const [key, value] of Object.entries(newNote))
       if (value == null)
@@ -37,17 +37,14 @@ notesRouter
       .then(note => {
         res
           .status(201)
-          .location(
-            path.posix
-              .join(req.originalUrl, `/${note.id}`)
-              .json(serializeNote(note))
-          );
+          .location(path.posix.join(req.originalUrl, `/${note.note_id}`))
+          .json(serializeNote(note));
       })
       .catch(next);
   });
 
 notesRouter
-  .route("/api/:note_id")
+  .route("/:note_id")
   .all((req, res, next) => {
     NotesService.getById(req.app.get("db"), req.params.note_id)
       .then(note => {
