@@ -7,8 +7,8 @@ const jsonParser = express.json();
 
 const serializeNote = note => ({
   id: note.id,
-  title: note.text,
-  folderId: note.folderId,
+  title: note.title,
+  folder_id: note.folder_id,
   content: note.content,
   date_published: new Date(note.date_published),
   modified: note.modified
@@ -25,8 +25,8 @@ notesRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-    const { title, folderId, content, modified } = req.body;
-    const newNote = { title, folderId, content, modified };
+    const { title, folder_id, content, modified } = req.body;
+    const newNote = { title, folder_id, content, modified };
 
     for (const [key, value] of Object.entries(newNote))
       if (value == null)
@@ -47,7 +47,7 @@ notesRouter
   });
 
 notesRouter
-  .route("/:note_id")
+  .route("/api/:note_id")
   .all((req, res, next) => {
     NotesService.getById(req.app.get("db"), req.params.note_id)
       .then(note => {
@@ -72,10 +72,10 @@ notesRouter
       .catch(next);
   })
   .patch(jsonParser, (req, res, next) => {
-    const { title, folderId, content, modified } = req.body;
+    const { title, folder_id, content, modified } = req.body;
     const noteToUpdate = {
       title: title,
-      folderId: folderId,
+      folder_id: folder_id,
       content: content,
       modified: new Date()
     };
@@ -88,6 +88,8 @@ notesRouter
         }
       });
     }
+    updatedNote.modified = new Date();
+
     NotesService.updateNote(req.app.get("db"), req.params.title, noteToUpdate)
       .then(numRowsAffected => {
         res.status(204).end();

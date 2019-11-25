@@ -1,10 +1,10 @@
-INSERT INTO folders (folderId)
+INSERT INTO folders (folder_id)
 VALUES 
 ('School'),
 ('Shopping'),
 ('Food')
 
-INSERT INTO notes (id, title, modified, folderId, content)
+INSERT INTO notes (id, title, modified, folder_id, content)
 VALUES
 (1, 'Interview prep', '11/5/2019', '1',
     'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Natus consequuntur deserunt commodi, nobis qui inventore corrupti iusto aliquid debitis unde non. Adipisci, pariatur. Molestiae, libero esse hic adipisci autem neque?'),

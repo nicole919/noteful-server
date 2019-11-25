@@ -15,8 +15,18 @@ const FoldersService = {
     return knex
       .from("folders")
       .select("*")
-      .where({ id })
+      .where("folder_id", id)
       .first();
+  },
+  deleteFolder(knex, id) {
+    return knex("folders")
+      .where("folder_id", id)
+      .delete();
+  },
+  updateFolder(knex, id, updatedFolder) {
+    return knex("folders")
+      .where("folder_id", id)
+      .update(updatedFolder);
   }
 };
 
